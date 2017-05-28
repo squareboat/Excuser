@@ -49,6 +49,12 @@ captures/
 # Google Services (e.g. APIs or Firebase)
 google-services.json
 
+# Fabric
+fabric.properties
+
+# Keystore Credentials
+keystore.properties
+
 # Freeline
 freeline.py
 freeline/

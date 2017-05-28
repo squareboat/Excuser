@@ -1,0 +1,45 @@
+apply plugin: 'com.android.application'
+
+// Load keystore.properties
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+    defaultConfig {
+        applicationId "com.squareboat.excuser"
+        minSdkVersion 20
+        targetSdkVersion 25
+        versionCode = Integer.valueOf("" + appVersionCode).intValue()
+        versionName "${appVersionName}"
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['STORE_FILE'])
+            keyAlias keystoreProperties['KEY_ALIAS']
+            storePassword keystoreProperties['STORE_PASSWORD']
+            keyPassword keystoreProperties['KEY_PASSWORD']
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    provided 'com.google.android.wearable:wearable:2.0.2'
+    compile 'com.google.android.support:wearable:2.0.2'
+    compile 'com.google.android.gms:play-services-wearable:10.2.6'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:support-vector-drawable:25.3.1'
+}

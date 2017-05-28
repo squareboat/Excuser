@@ -1,0 +1,95 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
+
+// Load keystore.properties
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+    defaultConfig {
+        applicationId "com.squareboat.excuser"
+        minSdkVersion 21
+        targetSdkVersion 25
+        versionCode = Integer.valueOf("" + appVersionCode).intValue()
+        versionName "${appVersionName}"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['STORE_FILE'])
+            keyAlias keystoreProperties['KEY_ALIAS']
+            storePassword keystoreProperties['STORE_PASSWORD']
+            keyPassword keystoreProperties['KEY_PASSWORD']
+        }
+    }
+
+    buildTypes {
+        debug {
+            // Disable fabric build ID generation for debug builds
+            ext.enableCrashlytics = false
+            // Only use this flag on builds you don't proguard or upload to beta-by-crashlytics
+            ext.alwaysUpdateBuildId = false
+        }
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    aaptOptions {
+        cruncherEnabled = false
+    }
+
+    dexOptions {
+        // Sets the maximum number of DEX processes
+        // that can be started concurrently.
+        maxProcessCount 8
+        // Sets the maximum memory allocation pool size
+        // for the dex operation.
+        javaMaxHeapSize "2g"
+        // Enables Gradle to pre-dex library dependencies.
+        preDexLibraries true
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    wearApp project(':wear')
+    compile 'com.google.android.gms:play-services-wearable:10.2.6'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:cardview-v7:25.3.1'
+    compile 'com.android.support:preference-v7:25.3.1'
+    compile 'com.android.support:percent:25.3.1'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    compile 'net.frakbot:glowpadbackport:2.1.1'
+    compile 'com.afollestad.material-dialogs:core:0.9.4.4'
+    compile 'com.google.code.gson:gson:2.8.0'
+    testCompile 'junit:junit:4.12'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
+}

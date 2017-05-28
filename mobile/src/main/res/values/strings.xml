@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">Excuser</string>
+    <string name="action_settings">Settings</string>
+    <string name="incoming_call">Incoming Call</string>
+    <string name="name">Name</string>
+    <string name="mobile">Mobile</string>
+    <string name="add">Add</string>
+    <string name="no_contacts">No Contacts Added!\nPlease add contacts from + button.</string>
+    <string name="edit_contact">Edit Contact</string>
+    <string name="delete_contact">Delete Contact</string>
+    <string name="update">Update</string>
+
+    <string name="demo_name">Excuser Demo</string>
+    <string name="demo_number">Mobile: 9999999999</string>
+
+    <string name="device_wear_loading_line_hidden">M117.9,91.4 L118.0,91.4 L118.0,112.5 L117.9,112.5 L117.9,98.4 Z</string>
+    <string name="device_wear_loading_line_shown">M117.9,91.4 L309.1,91.4 L309.1,112.5 L117.9,112.5 L117.9,98.4 Z</string>
+
+    <string name="checking_message">Checking for connected wear devices</string>
+    <string name="no_devices_linked">You have no Wear devices linked to your phone. Please click below button to get Android Wear App to get started.</string>
+    <string name="no_devices">You have no Wear devices linked to your phone at this time.</string>
+    <string name="missing_all_message">You are missing Excuser on your Wear device(s). Please wait while Excuser is getting installed.</string>
+    <string name="installed_some_devices_message">Excuser has been installed on some your Wear device(s)! You can now start using Excuser on your watch.</string>
+    <string name="installed_all_devices_message">Excuser has been installed on your Wear! You can now start using Excuser on your watch.</string>
+
+    <string name="connecting">Connecting&#8230;</string>
+    <string name="shake_wear">Shake Android Wear</string>
+    <string name="shake_wear_message">First, open the app on your Android Wear and check if Excuser is ON. Then, shake your wrist.</string>
+    <string name="shake_intensity">Shake Intensity</string>
+    <string name="shake_intensity_message">Please set the intensity level at which you would like to trigger Excuser.</string>
+    <string name="low">Low</string>
+    <string name="moderate">Moderate</string>
+    <string name="high">High</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="intensity_preference_key">shakeIntensityType</string>
+    <string name="get_android_wear_app">Android Wear App</string>
+
+</resources>

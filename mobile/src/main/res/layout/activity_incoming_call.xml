@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/coordinatorLayout"
+    tools:context="com.squareboat.excuser.activity.IncomingCallActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorIncomingCall"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/incoming_call"
+                    android:textColor="@color/colorWhite"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:id="@+id/text_caller_name"
+                    tools:text="Vipul Asri"
+                    android:textColor="@color/colorWhite"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/text_caller_phone"
+                        tools:text="Mobile: 999999999"
+                        android:textColor="@color/colorWhite"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/text_call_duration"
+                        tools:text="00:00"
+                        android:textColor="@color/colorWhite"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.3"
+                        android:tint="@color/colorWhite"
+                        app:srcCompat="@drawable/ic_volume_up"/>
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginRight="40dp"
+                        android:alpha="0.3"
+                        android:tint="@color/colorWhite"
+                        app:srcCompat="@drawable/ic_mic_off"/>
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.3"
+                        android:tint="@color/colorWhite"
+                        app:srcCompat="@drawable/ic_dialpad"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#545454"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:foreground="#99000000"
+            android:visibility="gone"
+            android:scaleType="fitXY"
+            android:src="@drawable/chris_banes"/>
+
+        <net.frakbot.glowpadbackport.GlowPadView
+            android:id="@+id/incomingCallWidget"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="-10dp"
+            android:layout_marginBottom="-46dp"
+            android:visibility="visible"
+            android:gravity="center"
+            app:targetDrawables="@array/incoming_call_widget_2way_targets"
+            app:handleDrawable="@drawable/ic_in_call_touch_handle"
+            app:innerRadius="@dimen/glowpadview_inner_radius"
+            app:outerRadius="@dimen/glowpadview_target_placement_radius"
+            app:outerRingDrawable="@drawable/ic_lockscreen_outerring"
+            app:snapMargin="@dimen/glowpadview_snap_margin"
+            app:vibrationDuration="20"
+            app:feedbackCount="1"
+            app:glowRadius="@dimen/glowpadview_glow_radius"
+            app:pointDrawable="@drawable/ic_lockscreen_glowdot"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_call_end"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            android:tint="@color/colorWhite"
+            app:srcCompat="@drawable/ic_call_end_white"
+            app:backgroundTint="@color/colorCallDecline"
+            app:fabSize="normal"/>
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Call Activity ring targets
+         - Answer (drag right)
+         - Reject (drag left)
+     -->
+    <array name="incoming_call_widget_2way_targets">
+        <item>@drawable/ic_lockscreen_answer</item>
+        <item>@null</item>
+        <item>@drawable/ic_lockscreen_decline</item>
+        <item>@null</item>"
+    </array>
+
+    <string-array name="shake_intensity_array">
+        <item>Low</item>
+        <item>Moderate</item>
+        <item>High</item>
+    </string-array>
+
+    <string-array name="shake_intensity_array_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+</resources>

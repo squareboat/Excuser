@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:title="Shake Intensity"
+        android:summary="Select wear shake intensity"
+        android:key="@string/intensity_preference_key"
+        android:defaultValue="1"
+        android:entries="@array/shake_intensity_array"
+        android:entryValues="@array/shake_intensity_array_values" />
+
+</PreferenceScreen>

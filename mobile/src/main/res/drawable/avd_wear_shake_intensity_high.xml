@@ -1,0 +1,56 @@
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:width="612dp"
+            android:height="612dp"
+            android:viewportWidth="612"
+            android:viewportHeight="612"
+            android:alpha="1">
+            <group android:name="group">
+                <group android:name="watch">
+                    <path
+                        android:name="path"
+                        android:pathData="M 510 306 C 510 242.25 479.4 183.6 433.5 145.35 L 408 0 L 204 0 L 178.5 145.35 C 132.6 183.6 102 242.25 102 306 C 102 369.75 132.6 428.4 178.5 466.65 L 204 612 L 408 612 L 433.5 466.65 C 479.4 428.4 510 369.75 510 306 Z M 153 306 C 153 221.85 221.85 153 306 153 C 390.15 153 459 221.85 459 306 C 459 390.15 390.15 459 306 459 C 221.85 459 153 390.15 153 306 Z"
+                        android:fillColor="#000000"/>
+                </group>
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="path">
+        <aapt:attr name="android:animation">
+            <set xmlns:android="http://schemas.android.com/apk/res/android">
+                <objectAnimator
+                    android:name="path"
+                    android:propertyName="pathData"
+                    android:duration="50"
+                    android:valueFrom="M 510 306 C 510 242.25 479.4 183.6 433.5 145.35 L 408 0 L 204 0 L 178.5 145.35 C 132.6 183.6 102 242.25 102 306 C 102 369.75 132.6 428.4 178.5 466.65 L 204 612 L 408 612 L 433.5 466.65 C 479.4 428.4 510 369.75 510 306 Z M 153 306 C 153 221.85 221.85 153 306 153 C 390.15 153 459 221.85 459 306 C 459 390.15 390.15 459 306 459 C 221.85 459 153 390.15 153 306 Z"
+                    android:valueTo="M 454 306 C 454 242.2 423.4 183.6 377.5 145.4 L 352 0 L 148 0 L 122.5 145.4 C 76.6 183.6 46 242.2 46 306 C 46 369.8 76.6 428.4 122.5 466.6 L 148 612 L 352 612 L 377.5 466.6 C 423.4 428.4 454 369.8 454 306 Z M 97 306 C 97 221.9 165.9 153 250 153 C 334.1 153 403 221.9 403 306 C 403 390.1 334.1 459 250 459 C 165.9 459 97 390.1 97 306 Z"
+                    android:valueType="pathType"
+                    android:interpolator="@android:anim/linear_interpolator"/>
+                <objectAnimator
+                    android:name="path"
+                    android:propertyName="pathData"
+                    android:startOffset="50"
+                    android:duration="50"
+                    android:valueFrom="M 510 306 C 510 242.25 479.4 183.6 433.5 145.35 L 408 0 L 204 0 L 178.5 145.35 C 132.6 183.6 102 242.25 102 306 C 102 369.75 132.6 428.4 178.5 466.65 L 204 612 L 408 612 L 433.5 466.65 C 479.4 428.4 510 369.75 510 306 Z M 153 306 C 153 221.85 221.85 153 306 153 C 390.15 153 459 221.85 459 306 C 459 390.15 390.15 459 306 459 C 221.85 459 153 390.15 153 306 Z"
+                    android:valueTo="M 554 306 C 554 242.2 523.4 183.6 477.5 145.4 L 452 0 L 248 0 L 222.5 145.4 C 176.6 183.6 146 242.2 146 306 C 146 369.8 176.6 428.4 222.5 466.6 L 248 612 L 452 612 L 477.5 466.6 C 523.4 428.4 554 369.8 554 306 Z M 197 306 C 197 221.9 265.9 153 350 153 C 434.1 153 503 221.9 503 306 C 503 390.1 434.1 459 350 459 C 265.9 459 197 390.1 197 306 Z"
+                    android:valueType="pathType"
+                    android:interpolator="@android:anim/linear_interpolator"/>
+                <objectAnimator
+                    android:name="path"
+                    android:propertyName="pathData"
+                    android:startOffset="100"
+                    android:duration="50"
+                    android:valueFrom="M 554 306 C 554 242.2 523.4 183.6 477.5 145.4 L 452 0 L 248 0 L 222.5 145.4 C 176.6 183.6 146 242.2 146 306 C 146 369.8 176.6 428.4 222.5 466.6 L 248 612 L 452 612 L 477.5 466.6 C 523.4 428.4 554 369.8 554 306 Z M 197 306 C 197 221.9 265.9 153 350 153 C 434.1 153 503 221.9 503 306 C 503 390.1 434.1 459 350 459 C 265.9 459 197 390.1 197 306 Z"
+                    android:valueTo="M 510 306 C 510 242.25 479.4 183.6 433.5 145.35 L 408 0 L 204 0 L 178.5 145.35 C 132.6 183.6 102 242.25 102 306 C 102 369.75 132.6 428.4 178.5 466.65 L 204 612 L 408 612 L 433.5 466.65 C 479.4 428.4 510 369.75 510 306 Z M 153 306 C 153 221.85 221.85 153 306 153 C 390.15 153 459 221.85 459 306 C 459 390.15 390.15 459 306 459 C 221.85 459 153 390.15 153 306 Z"
+                    android:valueType="pathType"
+                    android:repeatMode="reverse"
+                    android:repeatCount="12"
+                    android:interpolator="@android:anim/linear_interpolator"/>
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

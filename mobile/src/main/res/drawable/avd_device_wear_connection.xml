@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_device_wear_connection">
+
+    <target
+        android:name="connection_mask"
+        android:animation="@animator/device_wear_loading_line" />
+
+</animated-vector>
