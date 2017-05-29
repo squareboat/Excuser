@@ -1,13 +1,15 @@
 # Excuser
 
+![Showcase](https://github.com/squareboat/Excuser/blob/master/art/feature_graphics.png)
+
 Excuser is a utility app to rescue yourself from an awkward situation, boring meetings, annoying conversation, meaningless interviews etc.
 
 Just shake your wrist with Andorid Wear and the fake call will ring your phone instantly.
 
 The app allows you to:
 
-a. Specify the intensity of the shake which triggers the incoming call.
-b. Specify custom contacts (which are chosen randomly) for the incoming call.
+* Specify the intensity of the shake which triggers the incoming call.
+* Specify custom contacts (which are chosen randomly) for the incoming call.
 
 **Escape boredom. No need to make boring excuses - Just get Excuser!**
 
