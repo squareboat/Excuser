@@ -10,7 +10,7 @@ android {
     buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "com.squareboat.excuser"
-        minSdkVersion 20
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode = Integer.valueOf("" + appVersionCode).intValue()
         versionName "${appVersionName}"
@@ -37,9 +37,9 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    provided 'com.google.android.wearable:wearable:2.0.2'
-    compile 'com.google.android.support:wearable:2.0.2'
-    compile 'com.google.android.gms:play-services-wearable:10.2.6'
+    provided 'com.google.android.wearable:wearable:2.0.3'
+    compile 'com.google.android.support:wearable:2.0.3'
+    compile 'com.google.android.gms:play-services-wearable:11.0.0'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:support-vector-drawable:25.3.1'
 }
