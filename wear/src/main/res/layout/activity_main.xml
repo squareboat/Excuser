@@ -13,12 +13,12 @@
         android:gravity="center"
         app:layout_box="all">
 
-        <android.support.v7.widget.AppCompatImageView
+        <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:id="@+id/image_excuser"
             android:tint="@color/colorWhite"
-            app:srcCompat="@drawable/ic_app_logo"/>
+            android:src="@drawable/ic_app_logo"/>
 
         <TextView
             android:layout_width="wrap_content"

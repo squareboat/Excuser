@@ -14,7 +14,6 @@ android {
         targetSdkVersion 25
         versionCode = Integer.valueOf("" + appVersionCode).intValue()
         versionName "${appVersionName}"
-        vectorDrawables.useSupportLibrary = true
     }
 
     signingConfigs {
@@ -40,6 +39,4 @@ dependencies {
     provided 'com.google.android.wearable:wearable:2.0.3'
     compile 'com.google.android.support:wearable:2.0.3'
     compile 'com.google.android.gms:play-services-wearable:11.0.0'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:support-vector-drawable:25.3.1'
 }

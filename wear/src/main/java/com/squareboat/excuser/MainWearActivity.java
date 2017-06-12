@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.wearable.view.BoxInsetLayout;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +24,7 @@ import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableStatusCodes;
 import com.squareboat.excuser.service.AccelerometerSensorService;
+import com.squareboat.excuser.utils.LocalStoreUtils;
 import com.squareboat.excuser.utils.Utils;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class MainWearActivity extends Activity implements GoogleApiClient.Connec
         GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "MainWearActivity";
-    private AppCompatImageView mExcuserImage;
+    private ImageView mExcuserImage;
     private TextView mExcuserStatus;
     private GoogleApiClient mGoogleApiClient;
     private BoxInsetLayout mBoxInsetLayout;
@@ -46,13 +47,15 @@ public class MainWearActivity extends Activity implements GoogleApiClient.Connec
         Log.d("AccelerometerSensorService Running", "->"+ Utils.isMyServiceRunning(this, AccelerometerSensorService.class));
 
         mBoxInsetLayout = (BoxInsetLayout) findViewById(R.id.boxInsetLayout);
-        mExcuserImage = (AppCompatImageView) findViewById(R.id.image_excuser);
+        mExcuserImage = (ImageView) findViewById(R.id.image_excuser);
         mExcuserStatus = (TextView) findViewById(R.id.text_excuser_status);
 
         //By default start service
-        if(!Utils.isMyServiceRunning(MainWearActivity.this, AccelerometerSensorService.class)) {
+        if(LocalStoreUtils.getIsFirstTime(this)) {
             startService(new Intent(getApplicationContext(), AccelerometerSensorService.class));
+            LocalStoreUtils.setIsFirstTime(false, this);
         }
+
         updateView();
 
         mBoxInsetLayout.setOnClickListener(new View.OnClickListener() {

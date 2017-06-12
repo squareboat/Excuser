@@ -10,7 +10,28 @@ import android.content.SharedPreferences;
 public class LocalStoreUtils {
 
     private static final String PREF_FILE_NAME = "com.squareboat.excuser";
+    private static final String KEY_IS_FIRST_TIME = "is_first_time";
     private static final String KEY_SHAKE_INTENSITY_DATA = "shake_intensity_data";
+
+    public static void setIsFirstTime(boolean value, Context context) {
+        try {
+            SharedPreferences.Editor editor = getSharedEditor(context);
+            editor.putBoolean(KEY_IS_FIRST_TIME, value);
+            editor.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean getIsFirstTime(Context context) {
+        try {
+            SharedPreferences pref = getSharedPreference(context);
+            return pref.getBoolean(KEY_IS_FIRST_TIME, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 
     public static void setShakeIntensity(String value, Context context) {
         try {
