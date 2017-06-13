@@ -7,9 +7,12 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -22,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -32,8 +36,10 @@ import com.google.android.gms.wearable.CapabilityInfo;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
+import com.google.android.wearable.intent.RemoteIntent;
 import com.squareboat.excuser.R;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -70,6 +76,9 @@ public class DeviceWearConnectionFragment extends Fragment implements
     @BindString(R.string.installed_all_devices_message)
     String INSTALLED_ALL_DEVICES_MESSAGE;
 
+    @BindString(R.string.app_playstore_url)
+    String PLAY_STORE_APP_URI;
+
     String CAPABILITY_WEAR_APP = "com_squareboat_excuser_wear_app";
 
     @BindView(R.id.image_device_wear_connection)
@@ -83,6 +92,9 @@ public class DeviceWearConnectionFragment extends Fragment implements
 
     @BindView(R.id.button_wear_app)
     AppCompatButton mWearAppButton;
+
+    @BindView(R.id.button_install_wear_app)
+    AppCompatButton mInstallAppOnWear;
 
     @BindView(R.id.button_device_next)
     FloatingActionButton mButtonNext;
@@ -123,6 +135,14 @@ public class DeviceWearConnectionFragment extends Fragment implements
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.wearable.app"));
                 startActivity(intent);
+            }
+        });
+
+        mInstallAppOnWear.setVisibility(View.GONE);
+        mInstallAppOnWear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openPlayStoreOnWearDevicesWithoutApp();
             }
         });
 
@@ -287,22 +307,26 @@ public class DeviceWearConnectionFragment extends Fragment implements
     @SuppressLint("LongLogTag")
     private void verifyNodeAndUpdateUI(){
         mWearAppButton.setVisibility(View.GONE);
+        mInstallAppOnWear.setVisibility(View.GONE);
 
         if ((mWearNodesWithApp == null) || (mAllConnectedNodes == null)) {
             Log.d(TAG, "Waiting on Results for both connected nodes and nodes with app");
             mConnectionTitle.setText(getResources().getString(R.string.connecting));
             setConnectionMessage(CHECKING_MESSAGE);
+            mInstallAppOnWear.setVisibility(View.GONE);
             updateDeviceWearConnectionIcon(R.drawable.avd_device_wear_connection);
 
         } else if (mAllConnectedNodes.isEmpty()) {
             Log.d(TAG, NO_DEVICES);
             mConnectionTitle.setText("Connection Failed");
+            mInstallAppOnWear.setVisibility(View.GONE);
             setConnectionMessage(NO_DEVICES);
             updateDeviceWearConnectionIcon(R.drawable.avd_device_wear_connection_faliure);
 
         } else if (mWearNodesWithApp.isEmpty()) {
             Log.d(TAG, MISSING_ALL_MESSAGE);
             mConnectionTitle.setText("Please wait...");
+            mInstallAppOnWear.setVisibility(View.VISIBLE);
             setConnectionMessage(MISSING_ALL_MESSAGE);
             updateDeviceWearConnectionIcon(R.drawable.avd_device_wear_connection);
 
@@ -310,6 +334,7 @@ public class DeviceWearConnectionFragment extends Fragment implements
             String installMessage = String.format(INSTALLED_SOME_DEVICES_MESSAGE, mWearNodesWithApp);
             Log.d(TAG, installMessage);
             mConnectionTitle.setText("Connected");
+            mInstallAppOnWear.setVisibility(View.GONE);
             setConnectionMessage(INSTALLED_SOME_DEVICES_MESSAGE);
             updateDeviceWearConnectionIcon(R.drawable.avd_device_wear_connection_sucess);
             mButtonNext.show();
@@ -318,6 +343,7 @@ public class DeviceWearConnectionFragment extends Fragment implements
             String installMessage = String.format(INSTALLED_ALL_DEVICES_MESSAGE, mWearNodesWithApp);
             Log.d(TAG, installMessage);
             mConnectionTitle.setText("Connected");
+            mInstallAppOnWear.setVisibility(View.GONE);
             setConnectionMessage(INSTALLED_ALL_DEVICES_MESSAGE);
             updateDeviceWearConnectionIcon(R.drawable.avd_device_wear_connection_sucess);
             mButtonNext.show();
@@ -343,6 +369,57 @@ public class DeviceWearConnectionFragment extends Fragment implements
         });
 
         mConnectionMessage.startAnimation(mConnectionMessageAnimation);
+    }
+
+    @SuppressLint("LongLogTag")
+    private void openPlayStoreOnWearDevicesWithoutApp() {
+        Log.d(TAG, "openPlayStoreOnWearDevicesWithoutApp()");
+
+        // Create a List of Nodes (Wear devices) without your app.
+        ArrayList<Node> nodesWithoutApp = new ArrayList<>();
+
+        for (Node node : mAllConnectedNodes) {
+            if (!mWearNodesWithApp.contains(node)) {
+                nodesWithoutApp.add(node);
+            }
+        }
+
+        if (!nodesWithoutApp.isEmpty()) {
+            Log.d(TAG, "Number of nodes without app: " + nodesWithoutApp.size());
+
+            Intent intent = new Intent(Intent.ACTION_VIEW)
+                            .addCategory(Intent.CATEGORY_BROWSABLE)
+                            .setData(Uri.parse(PLAY_STORE_APP_URI));
+
+            for (Node node : nodesWithoutApp) {
+                RemoteIntent.startRemoteActivity(getContext(), intent, mResultReceiver, node.getId());
+            }
+        }
+    }
+
+    // Result from sending RemoteIntent to wear device(s) to open app in play/app store.
+    private final ResultReceiver mResultReceiver = new ResultReceiver(new Handler()) {
+        @SuppressLint("LongLogTag")
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            Log.d(TAG, "onReceiveResult: " + resultCode);
+
+            if (resultCode == RemoteIntent.RESULT_OK) {
+                showSnackBar(mInstallAppOnWear, R.string.playstore_request_successfull);
+
+            } else if (resultCode == RemoteIntent.RESULT_FAILED) {
+                showSnackBar(mInstallAppOnWear, R.string.playstore_request_fail);
+
+            }
+        }
+    };
+
+    private void showSnackBar(View view, String message){
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void showSnackBar(View view, int message){
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
 }

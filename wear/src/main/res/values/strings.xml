@@ -2,4 +2,8 @@
     <string name="app_name">Excuser</string>
     <string name="on">On</string>
     <string name="off">Off</string>
+    <string name="welcome_excuser">Welcome to Excuser!</string>
+    <string name="missing_app_on_phone">You are missing the required phone app, please click on the button below to install it on your phone.</string>
+    <string name="app_playstore_url">market://details?id=com.squareboat.excuser</string>
+    <string name="install_on_phone">Install on Phone</string>
 </resources>

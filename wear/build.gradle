@@ -8,6 +8,11 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
+
+    // Allows you to reference product flavors in your
+    // phone module's build.gradle file
+    publishNonDefault true
+
     defaultConfig {
         applicationId "com.squareboat.excuser"
         minSdkVersion 21
@@ -30,6 +35,16 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        wear1 {
+            // Use the defaultConfig value
+        }
+        wear2 {
+            minSdkVersion 25
+            versionCode = Integer.valueOf("" + wearAppVersionCode).intValue()
         }
     }
 }

@@ -61,6 +61,15 @@
                 android:textColor="@color/colorWhite"
                 android:textAllCaps="false"/>
 
+            <android.support.v7.widget.AppCompatButton
+                android:theme="@style/AppTheme.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_install_wear_app"
+                android:text="@string/install_app_on_wear"
+                android:textColor="@color/colorWhite"
+                android:textAllCaps="false"/>
+
         </LinearLayout>
 
     </android.support.percent.PercentRelativeLayout>
