@@ -2,6 +2,7 @@ package com.squareboat.excuser;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -54,13 +55,40 @@ public class MainWearActivity extends Activity implements GoogleApiClient.Connec
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
 
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N_MR1) {
-            setGoogleApiClient();
-            showMissingAppOnPhoneView();
-        } else {
-            showMainView();
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if(checkPlayServices()) {
+            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N_MR1) {
+                setGoogleApiClient();
+                showMissingAppOnPhoneView();
+            } else {
+                showMainView();
+            }
         }
+    }
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, 9000, new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        finish();
+                    }
+                }).show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 
     private void showMainView(){
