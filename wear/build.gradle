@@ -6,8 +6,8 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
 
     // Allows you to reference product flavors in your
     // phone module's build.gradle file
@@ -16,7 +16,7 @@ android {
     defaultConfig {
         applicationId "com.squareboat.excuser"
         minSdkVersion 21
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode = Integer.valueOf("" + appVersionCode).intValue()
         versionName "${appVersionName}"
     }
@@ -51,7 +51,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    provided 'com.google.android.wearable:wearable:2.0.3'
-    compile 'com.google.android.support:wearable:2.0.3'
-    compile 'com.google.android.gms:play-services-wearable:10.2.6'
+    compile 'com.android.support:wear:26.0.0'
+    provided 'com.google.android.wearable:wearable:2.0.4'
+    compile 'com.google.android.support:wearable:2.0.4'
+    compile 'com.google.android.gms:play-services-wearable:11.0.4'
 }

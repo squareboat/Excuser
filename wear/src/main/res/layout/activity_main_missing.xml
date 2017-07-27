@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.wearable.view.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/boxInsetLayout"
     android:layout_width="match_parent"
@@ -31,4 +31,4 @@
 
     </LinearLayout>
 
-</android.support.wearable.view.BoxInsetLayout>
+</android.support.wear.widget.BoxInsetLayout>
