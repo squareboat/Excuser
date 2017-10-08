@@ -19,18 +19,11 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.squareboat.excuser.R;
 import com.squareboat.excuser.activity.onboarding.WearShakeIntensityFragment;
-
-import java.nio.charset.Charset;
-import java.util.List;
 
 /**
  * Created by Vipul on 22/05/17.
@@ -53,11 +46,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
     private void setupActionBar() {
 
-        ViewGroup rootView = (ViewGroup)findViewById(R.id.action_bar_root);
+        ViewGroup rootView = findViewById(R.id.action_bar_root);
         View view = getLayoutInflater().inflate(R.layout.layout_toolbar, rootView, false);
         rootView.addView(view, 0);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -79,11 +72,27 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
 
     public static class MyPreferenceFragment extends PreferenceFragment implements GoogleApiClient.ConnectionCallbacks,
-            GoogleApiClient.OnConnectionFailedListener{
+            GoogleApiClient.OnConnectionFailedListener {
 
         private static final String TAG = "MyPreferenceFragment";
 
         private GoogleApiClient mGoogleApiClient;
+        Preference.OnPreferenceChangeListener preferenceChangeListener = new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                String stringValue = newValue.toString();
+                Log.e("stringValue", "->" + stringValue);
+
+                if (preference instanceof ListPreference) {
+                    ((ListPreference) preference).setValue(stringValue);
+                    String currValue = ((ListPreference) preference).getValue();
+                    Log.e("value", "->" + currValue);
+                    sendShakeIntensityToWear(currValue);
+                }
+
+                return false;
+            }
+        };
 
         @Override
         public void onCreate(final Bundle savedInstanceState) {
@@ -99,24 +108,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                             .getString(preference.getKey(), ""));
         }
 
-        Preference.OnPreferenceChangeListener preferenceChangeListener = new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                String stringValue = newValue.toString();
-                Log.e("stringValue", "->"+stringValue);
-
-                if (preference instanceof ListPreference) {
-                    ((ListPreference) preference).setValue(stringValue);
-                    String currValue = ((ListPreference) preference).getValue();
-                    Log.e("value", "->"+currValue);
-                    sendShakeIntensityToWear(currValue);
-                }
-
-                return false;
-            }
-        };
-
-        private void setGoogleApiClient(){
+        private void setGoogleApiClient() {
             mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                     .addApi(Wearable.API)
                     .addConnectionCallbacks(this)
@@ -164,7 +156,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             Log.e(TAG, "onConnectionFailed(): " + connectionResult);
         }
 
-        private void sendShakeIntensityToWear(String shakeIntensity){
+        private void sendShakeIntensityToWear(String shakeIntensity) {
             PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/SHAKEINTENSITY");
             putDataMapReq.getDataMap().putString(WearShakeIntensityFragment.SHAKE_INTENSITY_KEY, shakeIntensity);
             PutDataRequest putDataReq = putDataMapReq

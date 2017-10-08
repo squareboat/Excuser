@@ -19,11 +19,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
-import com.google.android.gms.wearable.WearableStatusCodes;
 import com.squareboat.excuser.utils.LocalStoreUtils;
 
 import java.util.List;
@@ -33,31 +31,22 @@ import java.util.List;
  */
 
 public class AccelerometerSensorService extends Service implements SensorEventListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener{
+        GoogleApiClient.OnConnectionFailedListener {
 
     public static final String TAG = "AccelerometerSensorService";
-
-    private static float SHAKE_THRESHOLD = 1.1f;
     private static final int SHAKE_WAIT_TIME_MS = 500;
-
+    private static float SHAKE_THRESHOLD = 1.1f;
+    IBinder mBinder = new LocalBinder();
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private long mShakeTime = 0;
     private GoogleApiClient mGoogleApiClient;
 
-    IBinder mBinder = new LocalBinder();
-
-    public class LocalBinder extends Binder {
-        public AccelerometerSensorService getServerInstance() {
-            return AccelerometerSensorService.this;
-        }
-    }
-
     @SuppressLint("LongLogTag")
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(TAG,"onCreate()");
+        Log.i(TAG, "onCreate()");
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
@@ -79,13 +68,13 @@ public class AccelerometerSensorService extends Service implements SensorEventLi
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if(mGoogleApiClient.isConnected()) {
-            Log.i(TAG+" onStartCommand", "GoogleApiClient Connected");
+        if (mGoogleApiClient.isConnected()) {
+            Log.i(TAG + " onStartCommand", "GoogleApiClient Connected");
             return START_STICKY;
         }
 
-        if(!mGoogleApiClient.isConnected() || !mGoogleApiClient.isConnecting()){
-            Log.i(TAG+" onStartCommand", "GoogleApiClient not Connected");
+        if (!mGoogleApiClient.isConnected() || !mGoogleApiClient.isConnecting()) {
+            Log.i(TAG + " onStartCommand", "GoogleApiClient not Connected");
             mGoogleApiClient.connect();
         }
 
@@ -99,7 +88,7 @@ public class AccelerometerSensorService extends Service implements SensorEventLi
             return;
         }
 
-        if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             detectShake(event);
         }
     }
@@ -115,7 +104,7 @@ public class AccelerometerSensorService extends Service implements SensorEventLi
     private void detectShake(SensorEvent event) {
         long now = System.currentTimeMillis();
 
-        if((now - mShakeTime) > SHAKE_WAIT_TIME_MS) {
+        if ((now - mShakeTime) > SHAKE_WAIT_TIME_MS) {
             mShakeTime = now;
 
             float gX = event.values[0] / SensorManager.GRAVITY_EARTH;
@@ -123,33 +112,33 @@ public class AccelerometerSensorService extends Service implements SensorEventLi
             float gZ = event.values[2] / SensorManager.GRAVITY_EARTH;
 
             // gForce will be close to 1 when there is no movement
-            float gForce = (float) Math.sqrt(gX*gX + gY*gY + gZ*gZ);
+            float gForce = (float) Math.sqrt(gX * gX + gY * gY + gZ * gZ);
 
             // Change background color if gForce exceeds threshold;
             // otherwise, reset the color
 
-            if(LocalStoreUtils.getShakeIntensity(this).equals("1")) {
+            if (LocalStoreUtils.getShakeIntensity(this).equals("1")) {
                 SHAKE_THRESHOLD = 1.1f;
             } else {
                 SHAKE_THRESHOLD = Float.parseFloat(LocalStoreUtils.getShakeIntensity(this));
             }
 
-            Log.e("SHAKE_THRESHOLD", "->"+SHAKE_THRESHOLD);
+            Log.e("SHAKE_THRESHOLD", "->" + SHAKE_THRESHOLD);
 
-            if(gForce > SHAKE_THRESHOLD) {
+            if (gForce > SHAKE_THRESHOLD) {
                 sendShakeEventToPhone();
             }
         }
     }
 
-    private void sendShakeEventToPhone(){
+    private void sendShakeEventToPhone() {
         final PendingResult<NodeApi.GetConnectedNodesResult> nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient);
         nodes.setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
             @Override
             public void onResult(NodeApi.GetConnectedNodesResult result) {
                 final List<Node> nodes = result.getNodes();
                 if (nodes != null) {
-                    for (int i=0; i<nodes.size(); i++) {
+                    for (int i = 0; i < nodes.size(); i++) {
                         final Node node = nodes.get(i);
                         Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), "/CALL", null);
                     }
@@ -180,5 +169,11 @@ public class AccelerometerSensorService extends Service implements SensorEventLi
     public void onDestroy() {
         super.onDestroy();
         mSensorManager.unregisterListener(this);
+    }
+
+    public class LocalBinder extends Binder {
+        public AccelerometerSensorService getServerInstance() {
+            return AccelerometerSensorService.this;
+        }
     }
 }

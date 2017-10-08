@@ -16,9 +16,9 @@ public class DataLayerListenerService extends WearableListenerService {
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         super.onMessageReceived(messageEvent);
-        Log.e("Message Event", "->"+messageEvent.toString());
+        Log.e("Message Event", "->" + messageEvent.toString());
 
-        if("/CALL".equals(messageEvent.getPath())) {
+        if ("/CALL".equals(messageEvent.getPath())) {
             Intent intent = new Intent(this, IncomingCallActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);

@@ -13,10 +13,10 @@ public class LocalStoreUtils {
     private static final String KEY_IS_FIRST_TIME = "is_first_time";
     private static final String KEY_SHAKE_INTENSITY_DATA = "shake_intensity_data";
 
-    public static void setIsFirstTime(boolean value, Context context) {
+    public static void setIsFirstTime(Context context) {
         try {
             SharedPreferences.Editor editor = getSharedEditor(context);
-            editor.putBoolean(KEY_IS_FIRST_TIME, value);
+            editor.putBoolean(KEY_IS_FIRST_TIME, false);
             editor.commit();
         } catch (Exception e) {
             e.printStackTrace();

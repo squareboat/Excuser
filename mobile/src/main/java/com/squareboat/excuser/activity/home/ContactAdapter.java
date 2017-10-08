@@ -5,7 +5,6 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,21 +23,15 @@ import butterknife.ButterKnife;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> {
 
-    public interface Callbacks {
-        public void onContactClick(Contact contact);
-        public void onContactDelete(Contact contact);
-    }
-
     private Callbacks mCallbacks;
     private Context context;
     private List<Contact> mFeedList;
-
     public ContactAdapter(List<Contact> feedList) {
         this.mFeedList = feedList;
     }
 
     @Override
-    public ContactViewHolder onCreateViewHolder (ViewGroup parent, int viewType) {
+    public ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
 
         View view = LayoutInflater.from(context).inflate(R.layout.item_contact, parent, false);
@@ -49,7 +42,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     public void onBindViewHolder(final ContactViewHolder holder, final int position) {
         final Contact contact = mFeedList.get(position);
 
-        if(contact.getName().isEmpty()) {
+        if (contact.getName().isEmpty()) {
             holder.contactName.setText("Untitled");
             holder.contactMobile.setText(contact.getMobile());
         } else {
@@ -73,16 +66,17 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
-                            case R.id.menu_edit_contact:
-                                {
-                                    if(mCallbacks!=null)
-                                        mCallbacks.onContactClick(contact);
-                                } break;
+                            case R.id.menu_edit_contact: {
+                                if (mCallbacks != null)
+                                    mCallbacks.onContactClick(contact);
+                            }
+                            break;
 
                             case R.id.menu_delete_contact: {
-                                if(mCallbacks!=null)
+                                if (mCallbacks != null)
                                     mCallbacks.onContactDelete(contact);
-                            } break;
+                            }
+                            break;
 
                         }
                         return true;
@@ -98,11 +92,22 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
 
     @Override
     public int getItemCount() {
-        return (mFeedList!=null? mFeedList.size():0);
+        return (mFeedList != null ? mFeedList.size() : 0);
     }
 
     public void setCallbacks(Callbacks callbacks) {
         this.mCallbacks = callbacks;
+    }
+
+    public void onItemAdded(Contact category) {
+        mFeedList.add(category);
+        notifyDataSetChanged();
+    }
+
+    public interface Callbacks {
+        public void onContactClick(Contact contact);
+
+        public void onContactDelete(Contact contact);
     }
 
     public class ContactViewHolder extends RecyclerView.ViewHolder {
@@ -123,11 +128,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-    }
-
-    public void onItemAdded(Contact category){
-        mFeedList.add(category);
-        notifyDataSetChanged();
     }
 
 }

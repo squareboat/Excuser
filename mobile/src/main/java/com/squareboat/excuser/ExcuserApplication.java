@@ -2,9 +2,8 @@ package com.squareboat.excuser;
 
 import android.app.Application;
 import android.os.StrictMode;
-import com.crashlytics.android.Crashlytics;
 
-import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 
 import io.fabric.sdk.android.Fabric;
@@ -15,15 +14,17 @@ import io.fabric.sdk.android.Fabric;
 
 public class ExcuserApplication extends Application {
 
-    public static final String TAG = ExcuserApplication.class.getSimpleName();
+    private static ExcuserApplication instance;
 
-    private static ExcuserApplication _instance;
+    public static ExcuserApplication getInstance() {
+        return instance;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        _instance = this;
+        instance = this;
 
         //Crashlytics, disabled for debug builds
         Crashlytics crashlytics = new Crashlytics.Builder()
@@ -47,10 +48,6 @@ public class ExcuserApplication extends Application {
                     .penaltyLog()
                     .build());
         }
-    }
-
-    public static ExcuserApplication getInstance() {
-        return _instance;
     }
 
     public String getAppPackageName() {

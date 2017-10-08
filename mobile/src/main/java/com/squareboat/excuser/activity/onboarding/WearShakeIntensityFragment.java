@@ -3,16 +3,12 @@ package com.squareboat.excuser.activity.onboarding;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Animatable;
 import android.graphics.drawable.AnimatedVectorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatSeekBar;
@@ -22,27 +18,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.wearable.DataApi;
-import com.google.android.gms.wearable.MessageApi;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
-import com.google.android.gms.wearable.WearableStatusCodes;
 import com.squareboat.excuser.R;
-import com.squareboat.excuser.activity.SplashActivity;
 import com.squareboat.excuser.activity.home.MainActivity;
 import com.squareboat.excuser.model.Contact;
 import com.squareboat.excuser.utils.LocalStoreUtils;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,12 +41,10 @@ import butterknife.ButterKnife;
 
 public class WearShakeIntensityFragment extends Fragment implements
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener{
-
-    private static final String TAG = "WearShakeIntensityFragment";
+        GoogleApiClient.OnConnectionFailedListener {
 
     public static final String SHAKE_INTENSITY_KEY = "com.squareboat.excuser.shakeintensity";
-
+    private static final String TAG = "WearShakeIntensityFragment";
     @BindView(R.id.button_done)
     FloatingActionButton mButtonDone;
 
@@ -100,9 +84,18 @@ public class WearShakeIntensityFragment extends Fragment implements
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 switch (progress) {
-                    case 0: mIntensityText.setText(getResources().getString(R.string.low)); updateShakeIntensityIcon(R.drawable.avd_wear_shake_intensity); break;
-                    case 1: mIntensityText.setText(getResources().getString(R.string.moderate)); updateShakeIntensityIcon(R.drawable.avd_wear_shake_intensity_moderate); break;
-                    case 2: mIntensityText.setText(getResources().getString(R.string.high)); updateShakeIntensityIcon(R.drawable.avd_wear_shake_intensity_high); break;
+                    case 0:
+                        mIntensityText.setText(getResources().getString(R.string.low));
+                        updateShakeIntensityIcon(R.drawable.avd_wear_shake_intensity);
+                        break;
+                    case 1:
+                        mIntensityText.setText(getResources().getString(R.string.moderate));
+                        updateShakeIntensityIcon(R.drawable.avd_wear_shake_intensity_moderate);
+                        break;
+                    case 2:
+                        mIntensityText.setText(getResources().getString(R.string.high));
+                        updateShakeIntensityIcon(R.drawable.avd_wear_shake_intensity_high);
+                        break;
                 }
             }
 
@@ -121,7 +114,7 @@ public class WearShakeIntensityFragment extends Fragment implements
             @Override
             public void onClick(View v) {
 
-                String shakeIntensity = String.valueOf(mIntensitySeekBar.getProgress()+1);
+                String shakeIntensity = String.valueOf(mIntensitySeekBar.getProgress() + 1);
 
                 sendShakeIntensityToWear(shakeIntensity);
 
@@ -137,7 +130,7 @@ public class WearShakeIntensityFragment extends Fragment implements
         });
     }
 
-    private void saveDummyData(){
+    private void saveDummyData() {
         List<Contact> contacts = new ArrayList<>();
         contacts.add(new Contact(1, "9876543210", "Home"));
         contacts.add(new Contact(2, "9437674662", "Office"));
@@ -146,7 +139,7 @@ public class WearShakeIntensityFragment extends Fragment implements
         LocalStoreUtils.setContacts(contacts, getActivity());
     }
 
-    private void updateShakeIntensityIcon(int resId){
+    private void updateShakeIntensityIcon(int resId) {
         AnimatedVectorDrawable avd = (AnimatedVectorDrawable) getActivity().getDrawable(resId);
 
         if (mShakeIntensity != null && avd != null) {
@@ -155,13 +148,13 @@ public class WearShakeIntensityFragment extends Fragment implements
         }
     }
 
-    private void launchMainActivity(){
+    private void launchMainActivity() {
         startActivity(new Intent(getActivity(), MainActivity.class));
         getActivity().overridePendingTransition(0, R.anim.fade_out);
         getActivity().finish();
     }
 
-    private void setGoogleApiClient(){
+    private void setGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(Wearable.API)
                 .addConnectionCallbacks(this)
@@ -208,12 +201,12 @@ public class WearShakeIntensityFragment extends Fragment implements
         Log.e(TAG, "onConnectionFailed(): " + connectionResult);
     }
 
-    private void sendShakeIntensityToWear(String shakeIntensity){
+    private void sendShakeIntensityToWear(String shakeIntensity) {
         PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/SHAKEINTENSITY");
         putDataMapReq.getDataMap().putString(SHAKE_INTENSITY_KEY, shakeIntensity);
         PutDataRequest putDataReq = putDataMapReq
-                                    .asPutDataRequest()
-                                    .setUrgent();
+                .asPutDataRequest()
+                .setUrgent();
         Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
     }
 

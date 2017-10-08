@@ -20,11 +20,6 @@ import com.squareboat.excuser.model.Contact;
 
 public class AddContactDialog extends DialogFragment {
 
-    public interface DialogCallback {
-        void onContactAdded(Contact contact);
-        void onContactUpdated(Contact contact);
-    }
-
     private DialogCallback mDialogCallback;
     private View positiveAction, negativeAction;
     private TextInputLayout nameInputLayout, mobileInputLayout;
@@ -48,10 +43,10 @@ public class AddContactDialog extends DialogFragment {
         this.mContact = getArguments().getParcelable("contact");
 
         materialDialog = new MaterialDialog.Builder(getActivity())
-                .title(mContact==null ? "Add Contact" : "Edit Contact")
+                .title(mContact == null ? "Add Contact" : "Edit Contact")
                 .customView(R.layout.dialog_add_contact, true)
                 .cancelable(false)
-                .positiveText(mContact==null ? R.string.add : R.string.update)
+                .positiveText(mContact == null ? R.string.add : R.string.update)
                 .negativeText(android.R.string.cancel)
                 .build();
 
@@ -62,7 +57,7 @@ public class AddContactDialog extends DialogFragment {
         nameInputLayout = (TextInputLayout) materialDialog.getCustomView().findViewById(R.id.input_layout_name);
         mobileInputLayout = (TextInputLayout) materialDialog.getCustomView().findViewById(R.id.input_layout_mobile);
 
-        if(mContact!=null) {
+        if (mContact != null) {
             nameEditText.setText(mContact.getName());
             mobileEditText.setText(mContact.getMobile());
         }
@@ -80,20 +75,19 @@ public class AddContactDialog extends DialogFragment {
                 String name = nameEditText.getText().toString().trim();
                 String mobile = mobileEditText.getText().toString().trim();
 
-                if(mobile.isEmpty()){
+                if (mobile.isEmpty()) {
                     mobileInputLayout.setError("Please enter mobile");
                     return;
                 }
 
-                if(mDialogCallback!=null) {
+                if (mDialogCallback != null) {
 
-                    if(mContact==null) {
+                    if (mContact == null) {
                         mContact = new Contact();
                         mContact.setName(name);
                         mContact.setMobile(mobile);
                         mDialogCallback.onContactAdded(mContact);
-                    }
-                    else {
+                    } else {
                         mContact.setName(name);
                         mContact.setMobile(mobile);
                         mDialogCallback.onContactUpdated(mContact);
@@ -108,8 +102,14 @@ public class AddContactDialog extends DialogFragment {
         return materialDialog;
     }
 
-    public void setDialogCallback(DialogCallback dialogCallback){
+    public void setDialogCallback(DialogCallback dialogCallback) {
         this.mDialogCallback = dialogCallback;
+    }
+
+    public interface DialogCallback {
+        void onContactAdded(Contact contact);
+
+        void onContactUpdated(Contact contact);
     }
 
 }

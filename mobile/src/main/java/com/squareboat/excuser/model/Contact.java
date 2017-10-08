@@ -1,4 +1,3 @@
-
 package com.squareboat.excuser.model;
 
 import android.os.Parcel;
@@ -20,6 +19,9 @@ public class Contact implements Parcelable {
         this.mId = mId;
         this.mMobile = mMobile;
         this.mName = mName;
+    }
+
+    public Contact() {
     }
 
     public int getId() {
@@ -58,16 +60,13 @@ public class Contact implements Parcelable {
         dest.writeString(this.mName);
     }
 
-    public Contact() {
-    }
-
     protected Contact(Parcel in) {
         this.mId = in.readInt();
         this.mMobile = in.readString();
         this.mName = in.readString();
     }
 
-    public static final Parcelable.Creator<Contact> CREATOR = new Parcelable.Creator<Contact>() {
+    public static final Creator<Contact> CREATOR = new Creator<Contact>() {
         @Override
         public Contact createFromParcel(Parcel source) {
             return new Contact(source);

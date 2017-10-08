@@ -35,29 +35,27 @@ public class SplashActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if(checkPlayServices()) {
+        if (checkPlayServices()) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-
-                    if(LocalStoreUtils.isOnboardingCompleted(SplashActivity.this)) {
+                    if (LocalStoreUtils.isOnboardingCompleted(SplashActivity.this)) {
                         launchMainActivity();
                     } else {
                         launchOnboardingActivity();
                     }
-
                 }
             }, SPLASH_TIME_OUT);
         }
     }
 
-    private void launchOnboardingActivity(){
+    private void launchOnboardingActivity() {
         startActivity(new Intent(SplashActivity.this, OnboardingActivity.class));
         overridePendingTransition(0, R.anim.fade_out);
         finish();
     }
 
-    private void launchMainActivity(){
+    private void launchMainActivity() {
         startActivity(new Intent(SplashActivity.this, MainActivity.class));
         overridePendingTransition(0, R.anim.fade_out);
         finish();
