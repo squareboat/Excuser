@@ -33,7 +33,6 @@ import com.google.android.wearable.intent.RemoteIntent;
 import com.google.android.wearable.playstore.PlayStoreAvailability;
 import com.squareboat.excuser.service.AccelerometerSensorService;
 import com.squareboat.excuser.utils.LocalStoreUtils;
-import com.squareboat.excuser.utils.Utils;
 
 import java.util.Set;
 
@@ -41,14 +40,28 @@ public class MainWearActivity extends Activity implements GoogleApiClient.Connec
         GoogleApiClient.OnConnectionFailedListener, CapabilityApi.CapabilityListener {
 
     private static final String TAG = "MainWearActivity";
+    private static final String CAPABILITY_PHONE_APP = "com_squareboat_excuser_phone_app";
+
+    // Result from sending RemoteIntent to phone to open app in play/app store.
+    private final ResultReceiver mResultReceiver = new ResultReceiver(new Handler()) {
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            if (resultCode == RemoteIntent.RESULT_OK) {
+                new ConfirmationOverlay().showOn(MainWearActivity.this);
+
+            } else if (resultCode == RemoteIntent.RESULT_FAILED) {
+                new ConfirmationOverlay()
+                        .setType(ConfirmationOverlay.FAILURE_ANIMATION)
+                        .showOn(MainWearActivity.this);
+            }
+        }
+    };
+
     private ImageView mExcuserImage;
     private TextView mExcuserStatus;
-    private Button mInstallAppOnPhone;
     private GoogleApiClient mGoogleApiClient;
     private BoxInsetLayout mBoxInsetLayout;
-
-    String CAPABILITY_PHONE_APP = "com_squareboat_excuser_phone_app";
-
     private Node mAndroidPhoneNodeWithApp;
 
     @SuppressLint("LongLogTag")
@@ -61,8 +74,8 @@ public class MainWearActivity extends Activity implements GoogleApiClient.Connec
     protected void onStart() {
         super.onStart();
 
-        if(checkPlayServices()) {
-            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N_MR1) {
+        if (checkPlayServices()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
                 setGoogleApiClient();
                 showMissingAppOnPhoneView();
             } else {
@@ -73,7 +86,9 @@ public class MainWearActivity extends Activity implements GoogleApiClient.Connec
 
     private boolean checkPlayServices() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+
         if (resultCode != ConnectionResult.SUCCESS) {
             if (apiAvailability.isUserResolvableError(resultCode)) {
                 apiAvailability.getErrorDialog(this, resultCode, 9000, new DialogInterface.OnCancelListener() {
@@ -91,17 +106,17 @@ public class MainWearActivity extends Activity implements GoogleApiClient.Connec
         return true;
     }
 
-    private void showMainView(){
+    private void showMainView() {
         setContentView(R.layout.activity_main);
 
-        mBoxInsetLayout = (BoxInsetLayout) findViewById(R.id.boxInsetLayout);
-        mExcuserImage = (ImageView) findViewById(R.id.image_excuser);
-        mExcuserStatus = (TextView) findViewById(R.id.text_excuser_status);
+        mBoxInsetLayout = findViewById(R.id.boxInsetLayout);
+        mExcuserImage = findViewById(R.id.image_excuser);
+        mExcuserStatus = findViewById(R.id.text_excuser_status);
 
         //By default start service
-        if(LocalStoreUtils.getIsFirstTime(this)) {
+        if (LocalStoreUtils.getIsFirstTime(this)) {
             startService(new Intent(getApplicationContext(), AccelerometerSensorService.class));
-            LocalStoreUtils.setIsFirstTime(false, this);
+            LocalStoreUtils.setIsFirstTime(this);
         }
 
         updateView();
@@ -109,7 +124,7 @@ public class MainWearActivity extends Activity implements GoogleApiClient.Connec
         mBoxInsetLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!Utils.isMyServiceRunning(MainWearActivity.this, AccelerometerSensorService.class)) {
+                if (!Utils.isMyServiceRunning(MainWearActivity.this, AccelerometerSensorService.class)) {
                     startService(new Intent(getApplicationContext(), AccelerometerSensorService.class));
                 } else {
                     stopService(new Intent(getApplicationContext(), AccelerometerSensorService.class));
@@ -120,10 +135,10 @@ public class MainWearActivity extends Activity implements GoogleApiClient.Connec
         });
     }
 
-    private void showMissingAppOnPhoneView(){
+    private void showMissingAppOnPhoneView() {
         setContentView(R.layout.activity_main_missing);
 
-        mInstallAppOnPhone = (Button) findViewById(R.id.button_install_phone);
+        Button mInstallAppOnPhone = findViewById(R.id.button_install_phone);
         mInstallAppOnPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,7 +147,7 @@ public class MainWearActivity extends Activity implements GoogleApiClient.Connec
         });
     }
 
-    private void setGoogleApiClient(){
+    private void setGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .addConnectionCallbacks(this)
@@ -140,8 +155,8 @@ public class MainWearActivity extends Activity implements GoogleApiClient.Connec
                 .build();
     }
 
-    private void updateView(){
-        if(Utils.isMyServiceRunning(MainWearActivity.this, AccelerometerSensorService.class)) {
+    private void updateView() {
+        if (Utils.isMyServiceRunning(MainWearActivity.this, AccelerometerSensorService.class)) {
             mBoxInsetLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
             mExcuserImage.setColorFilter(ContextCompat.getColor(this, R.color.colorWhite));
 
@@ -158,6 +173,7 @@ public class MainWearActivity extends Activity implements GoogleApiClient.Connec
     @Override
     public void onPause() {
         Log.d(TAG, "onPause()");
+
         super.onPause();
 
         if ((mGoogleApiClient != null) && mGoogleApiClient.isConnected()) {
@@ -174,7 +190,9 @@ public class MainWearActivity extends Activity implements GoogleApiClient.Connec
     @Override
     public void onResume() {
         Log.d(TAG, "onResume()");
+
         super.onResume();
+
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
@@ -258,15 +276,11 @@ public class MainWearActivity extends Activity implements GoogleApiClient.Connec
             case PlayStoreAvailability.PLAY_STORE_ON_PHONE_AVAILABLE:
                 Log.d(TAG, "\tPLAY_STORE_ON_PHONE_AVAILABLE");
 
-                Intent intentAndroid =
-                        new Intent(Intent.ACTION_VIEW)
-                                .addCategory(Intent.CATEGORY_BROWSABLE)
-                                .setData(Uri.parse(getResources().getString(R.string.app_playstore_url)));
+                Intent intentAndroid = new Intent(Intent.ACTION_VIEW)
+                        .addCategory(Intent.CATEGORY_BROWSABLE)
+                        .setData(Uri.parse(getResources().getString(R.string.app_playstore_url)));
 
-                RemoteIntent.startRemoteActivity(
-                        getApplicationContext(),
-                        intentAndroid,
-                        mResultReceiver);
+                RemoteIntent.startRemoteActivity(getApplicationContext(), intentAndroid, mResultReceiver);
                 break;
 
             // iPhone (iOS device) or Android without Play Store (not supported right now).
@@ -280,22 +294,6 @@ public class MainWearActivity extends Activity implements GoogleApiClient.Connec
         }
     }
 
-    // Result from sending RemoteIntent to phone to open app in play/app store.
-    private final ResultReceiver mResultReceiver = new ResultReceiver(new Handler()) {
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-
-            if (resultCode == RemoteIntent.RESULT_OK) {
-                new ConfirmationOverlay().showOn(MainWearActivity.this);
-
-            } else if (resultCode == RemoteIntent.RESULT_FAILED) {
-                new ConfirmationOverlay()
-                        .setType(ConfirmationOverlay.FAILURE_ANIMATION)
-                        .showOn(MainWearActivity.this);
-            }
-        }
-    };
-
     private Node pickBestNodeId(Set<Node> nodes) {
         Log.d(TAG, "pickBestNodeId(): " + nodes);
 
@@ -304,6 +302,7 @@ public class MainWearActivity extends Activity implements GoogleApiClient.Connec
         for (Node node : nodes) {
             bestNodeId = node;
         }
+
         return bestNodeId;
     }
 }

@@ -24,6 +24,7 @@ import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Vipul on 02/05/17.
@@ -31,39 +32,22 @@ import butterknife.ButterKnife;
 
 public class IncomingCallActivity extends BaseActivity {
 
-    private AudioPlayer mAudioPlayer;
-
     @BindView(R.id.text_caller_name)
-    TextView mCallerName;
-
+    protected TextView mCallerName;
     @BindView(R.id.text_caller_phone)
-    TextView mCallerPhone;
-
+    protected TextView mCallerPhone;
     @BindView(R.id.text_call_duration)
-    TextView mCallDuration;
-
+    protected TextView mCallDuration;
     @BindView(R.id.button_call_end)
-    FloatingActionButton mCallButton;
-
+    protected FloatingActionButton mCallButton;
     @BindView(R.id.incomingCallWidget)
-    GlowPadView mGlowPadView;
+    protected GlowPadView mGlowPadView;
 
+    private AudioPlayer mAudioPlayer;
     private Timer mTimer;
     private UpdateCallDurationTask mDurationTask;
     private CountDownTimer mActivityTimeout;
     private long mCallStart = 0;
-
-    private class UpdateCallDurationTask extends TimerTask {
-        @Override
-        public void run() {
-            IncomingCallActivity.this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateCallDuration();
-                }
-            });
-        }
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,9 +55,9 @@ public class IncomingCallActivity extends BaseActivity {
         setContentView(R.layout.activity_incoming_call);
         StatusBarUtil.setColor(this, ContextCompat.getColor(this, R.color.colorIncomingCallDark));
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON|
-                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
         ButterKnife.bind(this);
@@ -86,19 +70,19 @@ public class IncomingCallActivity extends BaseActivity {
         startActivityTimeout();
     }
 
-    private void initView(){
+    private void initView() {
 
         mCallButton.hide();
         initTimer();
 
-        if (LocalStoreUtils.getContacts(this)!=null && LocalStoreUtils.getContacts(this).size()>0) {
+        if (LocalStoreUtils.getContacts(this) != null && LocalStoreUtils.getContacts(this).size() > 0) {
 
             Random r = new Random();
             int randomId = r.nextInt(LocalStoreUtils.getContacts(this).size());
 
             Contact contact = LocalStoreUtils.getContacts(this).get(randomId);
 
-            if(contact.getName().isEmpty()) {
+            if (contact.getName().isEmpty()) {
                 mCallerName.setText(contact.getMobile());
                 mCallerPhone.setVisibility(View.GONE);
             } else {
@@ -125,9 +109,9 @@ public class IncomingCallActivity extends BaseActivity {
 
             @Override
             public void onTrigger(View v, int target) {
-                Log.e("target id", "->"+target);
+                Log.e("target id", "->" + target);
 
-                if(target==0) { //accept
+                if (target == 0) { //accept
                     onCallAccept();
                 } else { //decline
                     endActivity();
@@ -144,34 +128,32 @@ public class IncomingCallActivity extends BaseActivity {
                 // Do nothing
             }
         });
-
-        mCallButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                endActivity();
-            }
-        });
     }
 
-    private void initTimer(){
+    @OnClick(R.id.button_call_end)
+    protected void onCallEndClick() {
+        endActivity();
+    }
+
+    private void initTimer() {
         mTimer = new Timer();
         mDurationTask = new UpdateCallDurationTask();
     }
 
-    private void startTimer(){
+    private void startTimer() {
         mCallStart = System.currentTimeMillis();
         mTimer.schedule(mDurationTask, 0, 500);
     }
 
-    private void stopTimer(){
-        if(mDurationTask!=null)
+    private void stopTimer() {
+        if (mDurationTask != null)
             mDurationTask.cancel();
 
-        if(mTimer!=null)
+        if (mTimer != null)
             mTimer.cancel();
     }
 
-    private void onCallAccept(){
+    private void onCallAccept() {
         mAudioPlayer.stopRingtone();
         mGlowPadView.setVisibility(View.GONE);
         mCallButton.show();
@@ -179,11 +161,11 @@ public class IncomingCallActivity extends BaseActivity {
         mActivityTimeout.cancel();
     }
 
-    private void onCallReject(){
+    private void onCallReject() {
     }
 
-    private void endActivity(){
-        if(mAudioPlayer!=null)
+    private void endActivity() {
+        if (mAudioPlayer != null)
             mAudioPlayer.stopRingtone();
 
         mActivityTimeout.cancel();
@@ -191,7 +173,7 @@ public class IncomingCallActivity extends BaseActivity {
         android.os.Process.killProcess(android.os.Process.myPid()); //completely destroy app instance
     }
 
-    private void startActivityTimeout(){
+    private void startActivityTimeout() {
         mActivityTimeout = new CountDownTimer(30000, 100) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -202,11 +184,10 @@ public class IncomingCallActivity extends BaseActivity {
             public void onFinish() {
                 endActivity();
             }
-        }
-        .start();
+        }.start();
     }
 
-    private String formatTimespan(long timespan) {
+    private String formatTimeSpan(long timespan) {
         long totalSeconds = timespan / 1000;
         long minutes = totalSeconds / 60;
         long seconds = totalSeconds % 60;
@@ -214,17 +195,29 @@ public class IncomingCallActivity extends BaseActivity {
     }
 
     private void updateCallDuration() {
-        if(mCallStart>0) {
-            mCallDuration.setText(formatTimespan(System.currentTimeMillis() - mCallStart));
+        if (mCallStart > 0) {
+            mCallDuration.setText(formatTimeSpan(System.currentTimeMillis() - mCallStart));
         }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if(mAudioPlayer!=null)
+        if (mAudioPlayer != null)
             mAudioPlayer.stopRingtone();
 
         stopTimer();
+    }
+
+    private class UpdateCallDurationTask extends TimerTask {
+        @Override
+        public void run() {
+            IncomingCallActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateCallDuration();
+                }
+            });
+        }
     }
 }

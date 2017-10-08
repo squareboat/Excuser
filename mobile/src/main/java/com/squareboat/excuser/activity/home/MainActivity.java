@@ -4,9 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
@@ -21,8 +19,8 @@ import com.squareboat.excuser.activity.BaseActivity;
 import com.squareboat.excuser.activity.settings.SettingsActivity;
 import com.squareboat.excuser.model.Contact;
 import com.squareboat.excuser.utils.LocalStoreUtils;
-import com.squareboat.excuser.utils.Utils;
 import com.squareboat.excuser.widget.SpaceItemDecoration;
+import com.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +44,29 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
     private GoogleApiClient mGoogleApiClient;
     private ContactAdapter mContactAdapter;
     private List<Contact> mContacts = new ArrayList<>();
+    AddContactDialog.DialogCallback mAddContactDialogCallback = new AddContactDialog.DialogCallback() {
+
+        @Override
+        public void onContactAdded(Contact contact) {
+            Log.e("onContactAdded", "->");
+            if (LocalStoreUtils.getContacts(MainActivity.this) != null) {
+                int size = LocalStoreUtils.getContacts(MainActivity.this).size();
+                contact.setId(size);
+            } else {
+                contact.setId(0);
+            }
+
+            LocalStoreUtils.addContact(contact, MainActivity.this);
+            refreshData();
+        }
+
+        @Override
+        public void onContactUpdated(Contact contact) {
+            Log.e("onContactUpdated", "->");
+            LocalStoreUtils.updateContact(contact, MainActivity.this);
+            refreshData();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +77,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
         setupGoogleClient();
     }
 
-    private void setupGoogleClient(){
+    private void setupGoogleClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .addConnectionCallbacks(this)
@@ -64,7 +85,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
                 .build();
     }
 
-    private void initView(){
+    private void initView() {
         int columnCount = getResources().getInteger(R.integer.item_column);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, columnCount);
 
@@ -85,9 +106,9 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
         });
     }
 
-    private void refreshData(){
-        if(LocalStoreUtils.getContacts(this)!=null) {
-            if(LocalStoreUtils.getContacts(this).size()>0) {
+    private void refreshData() {
+        if (LocalStoreUtils.getContacts(this) != null) {
+            if (LocalStoreUtils.getContacts(this).size() > 0) {
                 showNoContent(false);
                 mContacts.clear();
                 mContacts.addAll(LocalStoreUtils.getContacts(this));
@@ -100,7 +121,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
         }
     }
 
-    private void showNoContent(boolean value){
+    private void showNoContent(boolean value) {
         int noContactVisibility = value ? View.VISIBLE : View.GONE;
         mNoContactsLayout.setVisibility(noContactVisibility);
 
@@ -142,30 +163,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
         Log.e(TAG, "onConnectionFailed(): " + connectionResult);
     }
 
-    AddContactDialog.DialogCallback mAddContactDialogCallback = new AddContactDialog.DialogCallback() {
-
-        @Override
-        public void onContactAdded(Contact contact) {
-            Log.e("onContactAdded", "->");
-            if (LocalStoreUtils.getContacts(MainActivity.this) != null) {
-                int size = LocalStoreUtils.getContacts(MainActivity.this).size();
-                contact.setId(size);
-            } else {
-                contact.setId(0);
-            }
-
-            LocalStoreUtils.addContact(contact, MainActivity.this);
-            refreshData();
-        }
-
-        @Override
-        public void onContactUpdated(Contact contact) {
-            Log.e("onContactUpdated", "->");
-            LocalStoreUtils.updateContact(contact, MainActivity.this);
-            refreshData();
-        }
-    };
-
     @Override
     public void onContactClick(Contact contact) {
         AddContactDialog.showDialog(getSupportFragmentManager(), contact, mAddContactDialogCallback);
@@ -187,7 +184,9 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.Connec
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.action_settings: SettingsActivity.launchActivity(this); break;
+            case R.id.action_settings:
+                SettingsActivity.launchActivity(this);
+                break;
         }
 
         return super.onOptionsItemSelected(item);

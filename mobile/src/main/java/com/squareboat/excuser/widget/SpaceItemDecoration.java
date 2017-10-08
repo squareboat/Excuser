@@ -3,6 +3,7 @@ package com.squareboat.excuser.widget;
 /**
  * Created by Vipul on 10/05/17.
  */
+
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

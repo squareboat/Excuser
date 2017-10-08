@@ -1,7 +1,5 @@
 package com.squareboat.excuser.activity.onboarding;
 
-import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -10,10 +8,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 
-import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.animation.ValueAnimator;
 import com.squareboat.excuser.R;
 
 import butterknife.BindView;
@@ -50,7 +45,7 @@ public class WearShakeDemoFragment extends Fragment {
         mButtonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((OnboardingActivity)getActivity()).showWearShakeIntensityFragment();
+                ((OnboardingActivity) getActivity()).showWearShakeIntensityFragment();
             }
         });
     }

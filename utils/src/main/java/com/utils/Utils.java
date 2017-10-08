@@ -1,4 +1,4 @@
-package com.squareboat.excuser.utils;
+package com.utils;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -45,7 +45,7 @@ public class Utils {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    public static void showKeyboard(Context context, View view){
+    public static void showKeyboard(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
@@ -61,14 +61,14 @@ public class Utils {
         return false;
     }
 
-    public static String getMetaData(Context context, String metaDataName){
+    public static String getMetaData(Context context, String metaDataName) {
 
         String metaDataValue = null;
 
         try {
             ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             Bundle bundle = ai.metaData;
-            metaDataValue =  bundle.getString(metaDataName);
+            metaDataValue = bundle.getString(metaDataName);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

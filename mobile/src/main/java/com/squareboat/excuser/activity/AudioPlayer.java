@@ -32,7 +32,7 @@ public class AudioPlayer {
                 mPlayer.setAudioStreamType(AudioManager.STREAM_RING);
 
                 try {
-                    if(hasSIM())
+                    if (hasSIM())
                         mPlayer.setDataSource(mContext, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
                     else
                         mPlayer.setDataSource(mContext, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
@@ -47,7 +47,7 @@ public class AudioPlayer {
                 break;
             case AudioManager.RINGER_MODE_VIBRATE:
                 mVibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
-                if(mVibrator.hasVibrator()) {
+                if (mVibrator.hasVibrator()) {
                     long[] pattern = {0, 500, 200};
 
                     // The '0' here means to repeat indefinitely
@@ -66,7 +66,7 @@ public class AudioPlayer {
             mPlayer = null;
         }
 
-        if(mVibrator!=null){
+        if (mVibrator != null) {
             mVibrator.cancel();
         }
     }
@@ -98,7 +98,7 @@ public class AudioPlayer {
         }
     }
 
-    private boolean hasSIM(){
+    private boolean hasSIM() {
         TelephonyManager manager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
         return manager.getPhoneType() != TelephonyManager.PHONE_TYPE_NONE;
     }

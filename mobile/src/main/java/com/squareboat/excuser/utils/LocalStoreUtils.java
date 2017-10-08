@@ -19,12 +19,11 @@ import java.util.Set;
  */
 
 public class LocalStoreUtils {
-    private static GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss");
-    private static Gson gson = gsonBuilder.create();
-
     private static final String PREF_FILE_NAME = "com.squareboat.excuser";
     private static final String KEY_ONBOARDING_DATA = "onboarding_data";
     private static final String KEY_CONTACT_DATA = "contact_data";
+    private static GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static Gson gson = gsonBuilder.create();
 
     public static void setOnboardingCompleted(boolean value, Context context) {
         try {
@@ -50,7 +49,7 @@ public class LocalStoreUtils {
         try {
             SharedPreferences.Editor editor = getSharedEditor(context);
             Set<String> set = new HashSet<String>();
-            if(states!=null) {
+            if (states != null) {
                 for (Contact state : states) {
                     set.add(gson.toJson(state));
                 }
@@ -62,10 +61,10 @@ public class LocalStoreUtils {
         }
     }
 
-    public static void addContact(Contact contact, Context context){
+    public static void addContact(Contact contact, Context context) {
         List<Contact> contacts = new ArrayList<>();
 
-        if (getContacts(context)!=null) {
+        if (getContacts(context) != null) {
             contacts = getContacts(context);
         }
 
@@ -73,11 +72,11 @@ public class LocalStoreUtils {
         setContacts(contacts, context);
     }
 
-    public static void updateContact(Contact contact, Context context){
+    public static void updateContact(Contact contact, Context context) {
         List<Contact> contacts = getContacts(context);
-        if (contacts!=null) {
-            for (int i=0;i<contacts.size();++i) {
-                if(contacts.get(i).getId() == contact.getId()) {
+        if (contacts != null) {
+            for (int i = 0; i < contacts.size(); ++i) {
+                if (contacts.get(i).getId() == contact.getId()) {
                     contacts.set(i, contact);
                     setContacts(contacts, context);
                 }
@@ -85,11 +84,11 @@ public class LocalStoreUtils {
         }
     }
 
-    public static void deleteContact(Contact contact, Context context){
+    public static void deleteContact(Contact contact, Context context) {
         List<Contact> contacts = getContacts(context);
-        if (contacts!=null) {
-            for (int i=0;i<contacts.size();++i) {
-                if(contacts.get(i).getId() == contact.getId()) {
+        if (contacts != null) {
+            for (int i = 0; i < contacts.size(); ++i) {
+                if (contacts.get(i).getId() == contact.getId()) {
                     contacts.remove(i);
                     setContacts(contacts, context);
                 }
@@ -119,7 +118,7 @@ public class LocalStoreUtils {
         }
 
         //sort contacts alphabetically
-        if (contacts!=null) {
+        if (contacts != null) {
             Collections.sort(contacts, new Comparator<Contact>() {
                 @Override
                 public int compare(Contact contact, Contact contact1) {

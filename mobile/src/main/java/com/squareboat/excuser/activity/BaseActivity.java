@@ -23,10 +23,10 @@ import butterknife.ButterKnife;
 public class BaseActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    protected Toolbar toolbar;
 
     @BindView(R.id.coordinatorLayout)
-    CoordinatorLayout coordinatorLayout;
+    protected CoordinatorLayout coordinatorLayout;
 
     @Override
     public void setContentView(int layoutResID) {
@@ -92,12 +92,12 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void setDisplayHomeAsUpEnabled(boolean value) {
-        if(getSupportActionBar()!=null)
+        if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(value);
     }
 
     public void setHomeAsUpIndicator(Drawable drawable) {
-        if(getSupportActionBar()!=null)
+        if (getSupportActionBar() != null)
             getSupportActionBar().setHomeAsUpIndicator(drawable);
     }
 
@@ -115,7 +115,7 @@ public class BaseActivity extends AppCompatActivity {
                 .make(getCoordinatorLayout(), value, Snackbar.LENGTH_LONG);
 
         View sbView = snackbar.getView();
-        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
         textView.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
         snackbar.show();
     }
@@ -125,7 +125,7 @@ public class BaseActivity extends AppCompatActivity {
                 .make(getCoordinatorLayout(), value, Snackbar.LENGTH_LONG);
 
         View sbView = snackbar.getView();
-        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
         textView.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
         snackbar.show();
     }
