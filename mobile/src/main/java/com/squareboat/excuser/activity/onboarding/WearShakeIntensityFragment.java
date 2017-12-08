@@ -139,10 +139,10 @@ public class WearShakeIntensityFragment extends Fragment implements
 
     private void saveDummyData(){
         List<Contact> contacts = new ArrayList<>();
-        contacts.add(new Contact(1, "9876543210", "Home"));
-        contacts.add(new Contact(2, "9437674662", "Office"));
-        contacts.add(new Contact(3, "9279123828", "Work"));
-        contacts.add(new Contact(4, "9262823792", "Home 2"));
+        contacts.add(new Contact(0, "9876543210", "Home"));
+        contacts.add(new Contact(1, "9437674662", "Office"));
+        contacts.add(new Contact(2, "9279123828", "Work"));
+        contacts.add(new Contact(3, "9262823792", "Home 2"));
         LocalStoreUtils.setContacts(contacts, getActivity());
     }
 
